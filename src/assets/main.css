@@ -1,0 +1,68 @@
+@import "./base.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --body-bg: var(--p-surface-50);
+  --body-text-color: var(--p-surface-900);
+  --card-border: 1px solid var(--border-color);
+  --card-bg: var(--p-surface-0);
+  --border-color: var(--p-surface-200);
+  --text-color: var(--p-surface-700);
+  --overlay-background: #ffffff;
+}
+
+:root[class="p-dark"] {
+  --body-bg: var(--p-surface-950);
+  --body-text-color: var(--p-surface-50);
+  --card-border: 1px solid transparent;
+  --card-bg: var(--p-surface-900);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --text-color: var(--p-surface-0);
+  --overlay-background: var(--p-surface-900);
+}
+
+html {
+  font-size: 14px;
+  margin: 0;
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-width: 100vw;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  min-height: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: var(--body-bg);
+  font-weight: normal;
+  color: var(--body-text-color);
+}
+
+/* Стили для WebKit-браузеров (Chrome, Safari, Edge) */
+html::-webkit-scrollbar {
+  width: 15px;
+}
+
+html::-webkit-scrollbar-track {
+  /* Цвет фона трека */
+  border-radius: 0 10px 10px 0;
+  /* Закругление справа сверху и справа снизу */
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #888;
+  /* Цвет ползунка */
+  border-radius: 10px;
+  /* Закругление справа сверху и справа снизу */
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  /* Цвет ползунка при наведении */
+}
