@@ -1,6 +1,7 @@
 <script setup>
 import BankCards from '../components/finance/bank_cards/BankCards.vue';
-import ChartComponent from '../components/finance/chart/ChartComponent.vue';
+    import HistoryComponent from '../components/finance/chart/HistoryComponent.vue';
+    import SummuryComponent from '../components/finance/summary/SummaryComponent.vue';
 import ActiveButtons from '../components/finance/active_buttons/ActiveButtonsComponent.vue';
 </script>
 
@@ -12,6 +13,9 @@ import ActiveButtons from '../components/finance/active_buttons/ActiveButtonsCom
 
         </div>
 
-        <ChartComponent />
+        <div class="flex-1 min-h-[300px]">
+            <HistoryComponent />
+        </div>
+        <SummuryComponent/>
     </div>
 </template>

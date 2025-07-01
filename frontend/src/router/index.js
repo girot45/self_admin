@@ -20,6 +20,11 @@ const router = createRouter({
           name: "Finance",
           component: FinanceView,
         },
+        {
+          path: "/projects",
+          name: "Projects",
+          component: HomeView,
+        },
       ],
     },
   ],

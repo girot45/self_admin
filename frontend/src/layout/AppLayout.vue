@@ -29,8 +29,8 @@ onMounted(() => {
 
     <div class="flex mt-20" style="height: 90vh;">
       <AppSidebar v-model:isVisible="isVisible" :class="{ 'me-4': isVisible }" />
-      <div class=" transition-all duration-300 w-full" :class="{ 'ml-80': isVisible, 'ml-0': !isVisible }">
-        <router-view class="p-0"> </router-view>
+      <div class=" transition-all duration-300 w-full" :class="{ 'ml-80': isVisible, 'ml-0 ps-4': !isVisible }">
+        <router-view class="p-0 pe-4"> </router-view>
       </div>
     </div>
     <div class="layout-mask animate-fadein"></div>

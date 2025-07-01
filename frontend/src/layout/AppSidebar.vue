@@ -1,17 +1,23 @@
 <template>
   <div class="relative h-screen bg-transparent">
-    <div class="fixed left-0 h-full w-80 transform transition-transform duration-300 ps-1 pb-96" :class="{
+    <!-- Боковая панель с динамической шириной -->
+    <div class="fixed left-0 overflow-hidden transition-all duration-300" :class="{
+      'w-0': !isVisible,
+      'w-80': isVisible,
+    }">
+      <div class="h-full ps-1 pb-96 transform transition-transform duration-300" :class="{
         '-translate-x-full': !isVisible,
         'translate-x-0': isVisible,
       }">
-      <Card class="scrollable">
-        <template #content>
-          <ul>
-            <li><router-link to="/test">123</router-link></li>
-
-          </ul>
-        </template>
-      </Card>
+        <Card class="scrollable h-full">
+          <template #content>
+            <ul>
+              <li><router-link to="/test">123</router-link></li>
+              <!-- Другие пункты меню -->
+            </ul>
+          </template>
+        </Card>
+      </div>
     </div>
   </div>
 </template>
