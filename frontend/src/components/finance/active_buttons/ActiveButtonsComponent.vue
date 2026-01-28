@@ -1,52 +1,60 @@
 <template>
-    <div class="w-fit rounded-2xl bg-zinc-900 p-5 grid grid-flow-row gap-5 ">
-        <Button label="Добавить трату" @click="openDialog" />
-        <Button label="Добавить доход" />
+    <div class="w-fit rounded-2xl bg-zinc-900 p-5 grid grid-flow-row gap-5">
+        <Button label="Добавить трату" @click="openExpenseDialog" severity="danger"/>
+        <Button label="Добавить доход" @click="openIncomeDialog" severity="submit"/>
+        <Button label="Перевод" @click="openTransferDialog" severity="info" />
     </div>
-    <Dialog v-model:visible="visible" header="Добавить трату" :style="{ width: '25rem' }">
-        <span class="text-surface-500 dark:text-surface-400 block mb-8">Введите информацию о трате.</span>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="amount" class="font-semibold w-24">Сумма</label>
-            <InputText id="amount" v-model="amount" class="flex-auto" autocomplete="off" />
-        </div>
-        <div class="flex items-center gap-4 mb-8">
-            <label for="description" class="font-semibold w-24">Описание</label>
-            <InputText id="description" v-model="description" class="flex-auto" autocomplete="off" />
-        </div>
-        <div class="flex justify-end gap-2">
-            <Button type="button" label="Отмена" severity="secondary" @click="visible = false"></Button>
-            <Button type="button" label="Сохранить" @click="submitForm"></Button>
-        </div>
+    
+    <!-- Диалог для трат -->
+    <Dialog v-model:visible="expenseVisible" header="Добавить трату" :style="{ width: '35rem' }">
+        <NewExpenseForm @close="expenseVisible = false" @success="handleExpenseSuccess" />
+    </Dialog>
+    
+    <!-- Диалог для доходов -->
+    <Dialog v-model:visible="incomeVisible" header="Добавить доход" :style="{ width: '35rem' }">
+        <NewIncomeForm @close="incomeVisible = false" @success="handleIncomeSuccess" />
+    </Dialog>
+    
+    <!-- Диалог для переводов -->
+    <Dialog v-model:visible="transferVisible" header="Выполнить перевод" :style="{ width: '35rem' }">
+        <NewTransferForm @close="transferVisible = false" @success="handleTransferSuccess" />
     </Dialog>
 </template>
 
 <script setup>
-    import { ref } from "vue";
+import { ref } from "vue";
+import NewExpenseForm from './src/NewExpenseForm.vue';
+import NewIncomeForm from './src/NewIncomeForm.vue';
+import NewTransferForm from './src/NewTransferForm.vue';
 
-    const visible = ref(false);
-    const amount = ref("");
-    const description = ref("");
+const expenseVisible = ref(false);
+const incomeVisible = ref(false);
+const transferVisible = ref(false);
 
-    const openDialog = () => {
-        visible.value = true;
-    };
+const openExpenseDialog = () => {
+    expenseVisible.value = true;
+};
 
-    const submitForm = async () => {
-        try {
-            const response = await fetch("http://127.0.0.1:8003/test", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+const openIncomeDialog = () => {
+    incomeVisible.value = true;
+};
 
-            });
-            if (response.ok) {
-                visible.value = false;
-                amount.value = "";
-                description.value = "";
-            } else {
-                console.error("Ошибка при отправке запроса");
-            }
-        } catch (error) {
-            console.error("Ошибка сети", error);
-        }
-    };
+const openTransferDialog = () => {
+    transferVisible.value = true;
+};
+
+const handleExpenseSuccess = () => {
+    expenseVisible.value = false;
+    console.log('Трата успешно добавлена');
+};
+
+const handleIncomeSuccess = () => {
+    incomeVisible.value = false;
+    console.log('Доход успешно добавлен');
+};
+
+const handleTransferSuccess = () => {
+    transferVisible.value = false;
+    console.log('Перевод успешно выполнен');
+};
 </script>

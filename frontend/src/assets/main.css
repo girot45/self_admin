@@ -11,6 +11,8 @@
   --border-color: var(--p-surface-200);
   --text-color: var(--p-surface-700);
   --overlay-background: #ffffff;
+  --scrollbar-color: rgb(56, 212, 155); /* Основной цвет ползунка */
+  --scrollbar-track-color: var(--body-bg); /* Цвет фона трека */
 }
 
 :root[class="p-dark"] {
@@ -21,6 +23,7 @@
   --border-color: rgba(255, 255, 255, 0.1);
   --text-color: var(--p-surface-0);
   --overlay-background: var(--p-surface-900);
+  --scrollbar-track-color: var(--body-bg); /* Для темной темы тоже берем body-bg */
 }
 
 html {
@@ -44,28 +47,159 @@ body {
   color: var(--body-text-color);
 }
 
-/* Стили для WebKit-браузеров (Chrome, Safari, Edge) */
+/* Основной скролл для всей страницы */
 html::-webkit-scrollbar {
-  width: 15px;
+  width: 12px;
+  height: 12px; /* Для горизонтального скролла */
 }
 
 html::-webkit-scrollbar-track {
-  /* Цвет фона трека */
+  background-color: var(--scrollbar-track-color);
   border-radius: 0 10px 10px 0;
-  /* Закругление справа сверху и справа снизу */
 }
 
 html::-webkit-scrollbar-thumb {
-  background: #888;
-  /* Цвет ползунка */
+  background-color: var(--scrollbar-color);
   border-radius: 10px;
-  /* Закругление справа сверху и справа снизу */
+  border: 2px solid var(--scrollbar-track-color);
 }
 
 html::-webkit-scrollbar-thumb:hover {
-  background: #555;
-  /* Цвет ползунка при наведении */
+  background-color: rgba(56, 212, 155, 0.8);
+  filter: brightness(0.9);
 }
-.public-footer dash__footer{
+
+html::-webkit-scrollbar-thumb:active {
+  background-color: rgba(56, 212, 155, 0.7);
+  filter: brightness(0.8);
+}
+
+/* Боковой скролл с высотой 90vh */
+.scroll-sidebar {
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* Стили для бокового скролла с высотой 90vh */
+.scroll-sidebar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scroll-sidebar::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+  border-radius: 4px;
+  margin: 2px 0;
+}
+
+.scroll-sidebar::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-color);
+  border-radius: 4px;
+  min-height: 40px;
+}
+
+.scroll-sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(56, 212, 155, 0.8);
+}
+
+.scroll-sidebar::-webkit-scrollbar-thumb:active {
+  background-color: rgba(56, 212, 155, 0.7);
+}
+
+/* Для элементов с вертикальным скроллом */
+.vertical-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.vertical-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.vertical-scroll::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+  border-radius: 4px;
+}
+
+.vertical-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-color);
+  border-radius: 4px;
+}
+
+/* Для элементов с горизонтальным скроллом */
+.horizontal-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+  border-radius: 4px;
+}
+
+.horizontal-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-color);
+  border-radius: 4px;
+}
+
+/* Стили для Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color);
+}
+
+/* Кастомные классы для контейнеров со скроллом */
+.custom-scroll {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+  border-radius: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-color);
+  border-radius: 4px;
+}
+
+/* Класс для элементов, которые должны занимать оставшееся пространство со скроллом */
+.flex-scroll-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.flex-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.flex-scroll-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.flex-scroll-content::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+  border-radius: 4px;
+}
+
+.flex-scroll-content::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-color);
+  border-radius: 4px;
+}
+
+.public-footer dash__footer {
   display: none;
 }

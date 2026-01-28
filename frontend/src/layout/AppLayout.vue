@@ -28,8 +28,8 @@ onMounted(() => {
     <AppTopbar v-model:isVisible="isVisible" @toggleCard="toggleCard" />
 
     <div class="flex mt-20" style="height: 90vh;">
-      <AppSidebar v-model:isVisible="isVisible" :class="{ 'me-4': isVisible }" />
-      <div class=" transition-all duration-300 w-full" :class="{ 'ml-80': isVisible, 'ml-0 ps-4': !isVisible }">
+      <AppSidebar v-model:isVisible="isVisible" :class="{ '': isVisible }" />
+      <div class=" transition-all duration-300 w-full  ps-4" :class="{ 'mx-40 ml-80': isVisible, 'mx-60': !isVisible }">
         <router-view class="p-0 pe-4"> </router-view>
       </div>
     </div>
