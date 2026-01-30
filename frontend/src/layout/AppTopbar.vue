@@ -48,6 +48,11 @@
       label: "About",
       icon: "pi pi-info-circle",
       to: '/about',
+    },
+    {
+      label: "Dash",
+      icon: "pi pi-info-circle",
+      to: '/dash',
     }
   ]);
 

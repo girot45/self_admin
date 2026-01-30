@@ -16,17 +16,6 @@ import ActiveButtons from '../components/finance/active_buttons/ActiveButtonsCom
         <div class="flex-1 min-h-[300px]">
             <HistoryComponent />
         </div>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>
-        <SummuryComponent/>     
+   
     </div>
 </template>
