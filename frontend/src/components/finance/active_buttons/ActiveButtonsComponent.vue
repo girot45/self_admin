@@ -1,9 +1,16 @@
 <template>
-    <div class="w-fit rounded-2xl bg-zinc-900 p-5 grid grid-flow-row gap-5">
-        <Button label="Добавить трату" @click="openExpenseDialog" severity="danger"/>
-        <Button label="Добавить доход" @click="openIncomeDialog" severity="submit"/>
-        <Button label="Перевод" @click="openTransferDialog" severity="info" />
-    </div>
+    <Card >
+        <template #header>
+        </template>
+        <template #content>
+            <div class=" rounded-2xl p-3 flex flex-col  gap-4">
+                <Button label="Добавить трату" @click="openExpenseDialog" severity="danger"/>
+                <Button label="Добавить доход" @click="openIncomeDialog" severity="submit"/>
+                <Button label="Перевод" @click="openTransferDialog" severity="info" />
+            </div>
+        </template>
+    </Card>
+
     
     <!-- Диалог для трат -->
     <Dialog v-model:visible="expenseVisible" header="Добавить трату" :style="{ width: '35rem' }">

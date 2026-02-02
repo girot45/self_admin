@@ -12,8 +12,11 @@
         <Card class="scrollable h-full">
           <template #content>
             <ul>
-              <li><router-link to="/test">123</router-link></li>
-              <!-- Другие пункты меню -->
+              <li v-for="item in menuItems" :key="item.to">
+                <router-link :to="item.to">
+                  {{ item.label }}
+                </router-link>
+              </li>
             </ul>
           </template>
         </Card>
@@ -22,12 +25,22 @@
   </div>
 </template>
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 defineProps({
   isVisible: Boolean,
 });
 
 defineEmits(["update:isVisible"]);
+
+const route = useRoute();
+
+const menuItems = computed(() => {
+  return route.meta.sidebar || [];
+});
 </script>
+>
+
 <style scoped>
 .scrollable {
   overflow-y: scroll;
