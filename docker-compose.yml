@@ -1,0 +1,137 @@
+version: "3.9"
+
+x-superset-env: &superset-env
+  SUPERSET_ENV: production
+  SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+  PYTHONPATH: /app/pythonpath
+  SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
+  SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://superset:${POSTGRES_PASSWORD}@postgres:5432/superset
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  CELERY_BROKER_URL: redis://redis:6379/0
+  CELERY_RESULT_BACKEND: redis://redis:6379/1
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: superset_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - superset_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset -d superset"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: superset_redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    volumes:
+      - superset_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  superset-init:
+    image: apache/superset:latest
+    container_name: superset_init
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *superset-env
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_FIRSTNAME: ${ADMIN_FIRSTNAME}
+      ADMIN_LASTNAME: ${ADMIN_LASTNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - ./docker/pythonpath:/app/pythonpath
+      - superset_home:/app/superset_home
+    command: >
+      /bin/sh -c "
+      superset db upgrade &&
+      superset fab create-admin
+        --username $$ADMIN_USERNAME
+        --firstname $$ADMIN_FIRSTNAME
+        --lastname $$ADMIN_LASTNAME
+        --email $$ADMIN_EMAIL
+        --password $$ADMIN_PASSWORD || true &&
+      superset init
+      "
+
+  superset:
+    image: apache/superset:latest
+    container_name: superset_app
+    restart: unless-stopped
+    depends_on:
+      superset-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *superset-env
+    volumes:
+      - ./docker/pythonpath:/app/pythonpath
+      - superset_home:/app/superset_home
+    ports:
+      - "8088:8088"
+    command: >
+      /bin/sh -c "
+      gunicorn
+      --bind 0.0.0.0:8088
+      --workers 4
+      --worker-class gthread
+      --threads 8
+      --timeout 120
+      'superset.app:create_app()'
+      "
+
+  superset-worker:
+    image: apache/superset:latest
+    container_name: superset_worker
+    restart: unless-stopped
+    depends_on:
+      superset-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *superset-env
+    volumes:
+      - ./docker/pythonpath:/app/pythonpath
+      - superset_home:/app/superset_home
+    command: >
+      /bin/sh -c "
+      celery --app=superset.tasks.celery_app:app worker --pool=prefork --concurrency=2
+      "
+
+  superset-beat:
+    image: apache/superset:latest
+    container_name: superset_beat
+    restart: unless-stopped
+    depends_on:
+      superset-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *superset-env
+    volumes:
+      - ./docker/pythonpath:/app/pythonpath
+      - superset_home:/app/superset_home
+    command: >
+      /bin/sh -c "
+      celery --app=superset.tasks.celery_app:app beat --schedule=/app/superset_home/celerybeat-schedule
+      "
+
+volumes:
+  superset_postgres_data:
+  superset_redis_data:
+  superset_home:

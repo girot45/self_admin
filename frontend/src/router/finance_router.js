@@ -5,9 +5,10 @@ export const financeRoutes = {
   component: FinanceView,
   meta: {
     sidebar: [
-      { label: "Обзор", to: { name: "FinanceOverview" } },
-      { label: "Отчёты", to: { name: "FinanceReports" } },
+      { label: "Главная", to: { name: "FinanceOverview" } },
       { label: "Платежи", to: { name: "FinancePayments" } },
+      { label: "Цели", to: { name: "FinancePayments" } },
+      { label: "Отчёты", to: { name: "FinanceReports" } },
     ],
   },
   children: [

@@ -12,8 +12,8 @@
                     class="w-full" 
                     :min="0" 
                     :maxFractionDigits="2"
-                    :minFractionDigits="2"
-                    placeholder="0.00"
+                    :minFractionDigits="0"
+                    placeholder="0.0"
                 />
             </div>
         </div>
