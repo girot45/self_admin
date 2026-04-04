@@ -1,27 +1,7 @@
-<!-- <script setup>
-import BankCards from '@/components/finance/bank_cards/BankCards.vue';
-import HistoryComponent from '@/components/finance/chart/HistoryComponent.vue';
-import ActiveButtons from '@/components/finance/active_buttons/ActiveButtonsComponent.vue';
-</script>
-
-<template>
-    
-  <div>
-    <div class="flex flex-row gap-5 mb-5">
-      <BankCards class="grow" />
-      <ActiveButtons />
-    </div>
-
-    <div class="flex-1 min-h-[300px]">
-      <HistoryComponent />
-    </div>
-  </div>
-</template> -->
-
 <template>
   <div class="flex justify-between">
-      <p class="text-6xl">Дашборд</p>
-      <p class="text-6xl">{{ currentDate }}</p>
+    <p class="text-6xl">Финансы</p>
+
   </div>
 
 
@@ -58,26 +38,24 @@ import ActiveButtons from '@/components/finance/active_buttons/ActiveButtonsComp
 
   </div>
 
-  <div class="charts-row">
-    <Card>
+  <div class="flex gap-4 mb-3">
+    <Card class="grow">
+      <template #subtitle>
+        Доходы и расходы
+      </template>
       <template #content>
-        <div class="section-header">
-          <span class="card-title">Доходы и расходы</span>
-          <div class="chart-legend">
-            <span><span class="legend-dot income"></span>Доходы</span>
-            <span><span class="legend-dot expense"></span>Расходы</span>
-          </div>
+        <div style="height: 400px; width: 100%;">
+          <Chart type="bar" :data="barChartData" :options="barChartOptions" style="height: 100%;" />
         </div>
-
-        <Chart type="bar" :data="barChartData" :options="barChartOptions" class="chart-box" />
       </template>
     </Card>
-
     <Card>
+      <template #subtitle>
+        Расходы по категориям
+      </template>
       <template #content>
-        <p class="card-title">Расходы по категориям</p>
 
-        <Chart type="doughnut" :data="doughnutData" :options="doughnutOptions" class="donut-box" />
+        <Chart type="doughnut" :data="doughnutData" :options="doughnutOptions" class="p-2" />
 
         <div class="donut-legend">
           <div class="legend-item" v-for="cat in categories" :key="cat.name">
@@ -174,7 +152,6 @@ import Chart from 'primevue/chart'
 import ProgressBar from 'primevue/progressbar'
 import Divider from 'primevue/divider'
 
-const currentDate = 'Сентябрь 2024'
 
 const tabs = ['Все', 'Личное', 'Работа']
 const activeTab = ref('Все')
@@ -251,7 +228,16 @@ const barChartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
-    legend: { display: false }
+    legend: {
+      display: true,
+      align: "end",
+      labels: {
+        font: {
+          family: "'Inter', sans-serif",
+          size: 12
+        }
+      }
+    }
   },
   scales: {
     x: {
@@ -259,7 +245,10 @@ const barChartOptions = computed(() => ({
       border: { display: false },
       ticks: {
         color: '#b0aea9',
-        font: { size: 11, family: 'Inter' }
+        font: {
+          size: 11,
+          family: "'Inter', sans-serif"
+        }
       }
     },
     y: {
@@ -267,13 +256,15 @@ const barChartOptions = computed(() => ({
       border: { display: false },
       ticks: {
         color: '#b0aea9',
-        font: { size: 10, family: 'Inter' },
+        font: {
+          size: 10,
+          family: "'Inter', sans-serif"
+        },
         callback: (value) => `₽${value / 1000}к`
       }
     }
   }
 }))
-
 const doughnutData = computed(() => ({
   labels: categories.map((c) => c.name),
   datasets: [
@@ -289,9 +280,10 @@ const doughnutData = computed(() => ({
 const doughnutOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: true,
+  // borderJoinStyle:"bevel",
   cutout: '72%',
   plugins: {
-    legend: { display: false }
+    legend: { display: false, position: "bottom" }
   }
 }))
 

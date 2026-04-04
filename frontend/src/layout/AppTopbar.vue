@@ -10,7 +10,9 @@
       </a>
     </template>
     <template #end>
-      <div class="flex items-center gap-2">
+      
+      <div class="flex items-center gap-10">
+        <p class="text-2xl self-center">{{ currentDate }}</p>
         <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
       </div>
     </template>
@@ -18,7 +20,7 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
+  import { ref, onMounted, onUnmounted } from "vue";
   import { useRouter } from 'vue-router'; // Import useRouter
 
   defineProps({
@@ -55,5 +57,38 @@
       to: '/dash',
     }
   ]);
+
+  
+const currentDate = ref('')
+
+// Функция форматирования даты
+const formatDateTime = () => {
+  const now = new Date()
+  
+  const day = String(now.getDate()).padStart(2, '0')
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const year = now.getFullYear()
+  
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  
+  return `${day}.${month}.${year} ${hours}:${minutes}`
+}
+
+// Обновление времени
+const updateDateTime = () => {
+  currentDate.value = formatDateTime()
+}
+
+let intervalId = null
+
+onMounted(() => {
+  updateDateTime() // Установить сразу
+  intervalId = setInterval(updateDateTime, 60000) // Обновлять каждую минуту
+})
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId) // Очистить интервал при уничтожении компонента
+})
 
 </script>
