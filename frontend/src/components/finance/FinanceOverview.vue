@@ -38,37 +38,41 @@
 
   </div>
 
-  <div class="flex gap-4 mb-3">
-    <Card class="grow">
-      <template #subtitle>
-        Доходы и расходы
-      </template>
-      <template #content>
-        <div style="height: 400px; width: 100%;">
-          <Chart type="bar" :data="barChartData" :options="barChartOptions" style="height: 100%;" />
-        </div>
-      </template>
-    </Card>
-    <Card>
-      <template #subtitle>
-        Расходы по категориям
-      </template>
-      <template #content>
+<div class="flex gap-4 mb-3">
 
-        <Chart type="doughnut" :data="doughnutData" :options="doughnutOptions" class="p-2" />
+  <!-- Карточка с bar-чартом -->
+  <Card class="grow ">
+    <template #subtitle>Доходы и расходы</template>
+    <template #content>
+      <div class="">
+        <Chart
+          type="bar"
+          :data="barChartData"
+          :options="barChartOptions"
+          :height="420"
+        />
+      </div>
+    </template>
+  </Card>
 
-        <div class="donut-legend">
-          <div class="legend-item" v-for="cat in categories" :key="cat.name">
-            <div class="legend-left">
-              <span class="legend-dot round" :style="{ background: cat.color }"></span>
-              <span class="legend-name">{{ cat.name }}</span>
-            </div>
-            <span class="legend-pct">{{ cat.pct }}%</span>
+  <!-- Карточка с бубликом — без изменений -->
+  <Card>
+    <template #subtitle>Расходы по категориям</template>
+    <template #content>
+      <Chart type="doughnut" :data="doughnutData" :options="doughnutOptions" class="p-2" />
+      <div class="donut-legend">
+        <div class="legend-item" v-for="cat in categories" :key="cat.name">
+          <div class="legend-left">
+            <span class="legend-dot round" :style="{ background: cat.color }"></span>
+            <span class="legend-name">{{ cat.name }}</span>
           </div>
+          <span class="legend-pct">{{ cat.pct }}%</span>
         </div>
-      </template>
-    </Card>
-  </div>
+      </div>
+    </template>
+  </Card>
+
+</div>
 
   <div class="bottom-row">
     <Card>
