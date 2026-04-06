@@ -32,7 +32,7 @@
 
   const items = ref([
     {
-      label: "Главная",
+      label: "Solara",
       icon: "pi pi-home",
       to: '/', // Add 'to' property for routing
     },

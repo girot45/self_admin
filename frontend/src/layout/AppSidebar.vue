@@ -59,11 +59,6 @@
     </div>
 
     <!-- Затемнение фона при открытом меню -->
-    <div 
-      v-if="isVisible" 
-      class="fixed inset-0 bg-black/20 z-30 transition-opacity duration-300"
-      @click="$emit('update:isVisible', false)"
-    ></div>
   </div>
 </template>
 
@@ -89,7 +84,7 @@ const isActive = (path) => {
 };
 </script>
 
-<style scoped>
+<style>
 .scrollable {
   overflow-y: auto;
   height: 90.5vh;
