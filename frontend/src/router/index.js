@@ -1,8 +1,10 @@
 import AppLayout from "@/layout/AppLayout.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import FinanceView from "@/views/FinanceView.vue";
+import HomeView from "@/views/HomeView.vue";
 import Dashboard from "@/views/DashboardView.vue";
+
+import { financeRoutes } from "./finance_router.js";
+import { projectRoutes } from "./project_router.js";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -12,22 +14,17 @@ const router = createRouter({
       component: AppLayout,
       children: [
         {
-          path: "/",
+          path: "",
           name: "Home",
           component: HomeView,
         },
+
+        financeRoutes,
+
+        projectRoutes,
+
         {
-          path: "/finance",
-          name: "Finance",
-          component: FinanceView,
-        },
-        {
-          path: "/projects",
-          name: "Projects",
-          component: HomeView,
-        },
-        {
-          path: "/dash",
+          path: "dash",
           name: "Dashboard",
           component: Dashboard,
         },
