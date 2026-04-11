@@ -1,11 +1,11 @@
 <script setup>
 import ChartsDashboard from '../components/dashboard/ChartsDashboard.vue';
- </script>
+</script>
 
 <template>
     <div class="h-fit">
-        <ChartsDashboard/>
+        <ChartsDashboard />
 
-   
+
     </div>
 </template>
