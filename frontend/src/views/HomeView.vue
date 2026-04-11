@@ -15,9 +15,10 @@
 
             </template>
         </Inplace>
-        <div class="rounded-2xl p-3 border border-zinc-800" v-for="task in tasks[(new Date(date)).toLocaleDateString('ru-RU')]">
-            <p>            {{ task.name }}</p>
-            <p>            {{ task.priority }}</p>
+        <div class="rounded-2xl p-3 border border-zinc-800"
+            v-for="task in tasks[(new Date(date)).toLocaleDateString('ru-RU')]">
+            <p> {{ task.name }}</p>
+            <p> {{ task.priority }}</p>
 
 
         </div>
@@ -27,15 +28,15 @@
 </template>
 
 <script setup>
-    import { ref } from "vue";
+import { ref } from "vue";
 
-    const date = ref(new Date());
-    var tasks = {
-        "15.03.2025": [
-            {
-                "name": "test",
-                "priority": "high"
-            }
-        ]
-    }
+const date = ref(new Date());
+var tasks = {
+    "15.03.2025": [
+        {
+            "name": "test",
+            "priority": "high"
+        }
+    ]
+}
 </script>
