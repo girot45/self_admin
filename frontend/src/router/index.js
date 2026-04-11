@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import Dashboard from "@/views/DashboardView.vue";
 
 import { financeRoutes } from "./finance_router.js";
+import { projectRoutes } from "./project_router.js";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -19,6 +20,8 @@ const router = createRouter({
         },
 
         financeRoutes,
+
+        projectRoutes,
 
         {
           path: "dash",

@@ -12,15 +12,21 @@
     </div>
     <div class="custom-card grow">
       <p class="text-sm text-gray-400 mb-1">Целевая сумма</p>
-      <p class="text-3xl font-bold">₽{{ totalGoalTarget.toLocaleString('ru-RU') }}</p>
+      <p class="text-3xl font-bold">
+        ₽{{ totalGoalTarget.toLocaleString("ru-RU") }}
+      </p>
     </div>
     <div class="custom-card grow">
       <p class="text-sm text-gray-400 mb-1">Уже накоплено</p>
-      <p class="text-3xl font-bold text-teal-600">₽{{ totalGoalSaved.toLocaleString('ru-RU') }}</p>
+      <p class="text-3xl font-bold text-teal-600">
+        ₽{{ totalGoalSaved.toLocaleString("ru-RU") }}
+      </p>
     </div>
     <div class="custom-card grow">
       <p class="text-sm text-gray-400 mb-1">До завершения</p>
-      <p class="text-3xl font-bold">₽{{ (totalGoalTarget - totalGoalSaved).toLocaleString('ru-RU') }}</p>
+      <p class="text-3xl font-bold">
+        ₽{{ (totalGoalTarget - totalGoalSaved).toLocaleString("ru-RU") }}
+      </p>
     </div>
   </div>
 
@@ -30,27 +36,49 @@
       <template #content>
         <div class="flex justify-between items-start mb-3">
           <div class="flex items-center gap-3">
-            <div class="cat-icon" :style="{ background: g.bg }">{{ g.emoji }}</div>
+            <div class="cat-icon" :style="{ background: g.bg }">
+              {{ g.emoji }}
+            </div>
             <div>
               <p class="font-semibold text-base">{{ g.name }}</p>
               <Tag
                 :value="g.type === 'saving' ? 'Накопление' : 'Трата'"
                 :severity="g.type === 'saving' ? 'success' : 'warn'"
-                rounded class="text-xs"
+                rounded
+                class="text-xs"
               />
             </div>
           </div>
           <div class="flex gap-1">
-            <Button icon="pi pi-pencil" text rounded size="small" @click="openGoalDialog(g)" />
-            <Button icon="pi pi-trash" text rounded size="small" severity="danger" @click="removeGoal(g.id)" />
+            <Button
+              icon="pi pi-pencil"
+              text
+              rounded
+              size="small"
+              @click="openGoalDialog(g)"
+            />
+            <Button
+              icon="pi pi-trash"
+              text
+              rounded
+              size="small"
+              severity="danger"
+              @click="removeGoal(g.id)"
+            />
           </div>
         </div>
 
         <!-- Дедлайн -->
-        <div class="flex items-center gap-2 mb-3 text-sm text-gray-400" v-if="g.deadline">
+        <div
+          class="flex items-center gap-2 mb-3 text-sm text-gray-400"
+          v-if="g.deadline"
+        >
           <i class="pi pi-calendar text-xs"></i>
           <span>До {{ formatDate(g.deadline) }}</span>
-          <span class="ml-auto text-xs" :class="daysLeft(g.deadline) < 30 ? 'text-red-400' : ''">
+          <span
+            class="ml-auto text-xs"
+            :class="daysLeft(g.deadline) < 30 ? 'text-red-400' : ''"
+          >
             {{ daysLeft(g.deadline) }} дн.
           </span>
         </div>
@@ -59,10 +87,16 @@
         <div class="flex justify-between text-sm mb-1">
           <span class="text-gray-500">Прогресс</span>
           <span class="font-semibold">
-            ₽{{ g.saved.toLocaleString('ru-RU') }} / ₽{{ g.target.toLocaleString('ru-RU') }}
+            ₽{{ g.saved.toLocaleString("ru-RU") }} / ₽{{
+              g.target.toLocaleString("ru-RU")
+            }}
           </span>
         </div>
-        <ProgressBar :value="Math.min((g.saved / g.target) * 100, 100)" :showValue="false" style="height:8px">
+        <ProgressBar
+          :value="Math.min((g.saved / g.target) * 100, 100)"
+          :showValue="false"
+          style="height: 8px"
+        >
           <template #value>
             <div class="h-full rounded-full" style="background: #01696f" />
           </template>
@@ -71,7 +105,7 @@
         <div class="flex justify-between mt-2 text-xs text-gray-400">
           <span>{{ Math.round((g.saved / g.target) * 100) }}%</span>
           <span class="text-teal-600">
-            Осталось ₽{{ (g.target - g.saved).toLocaleString('ru-RU') }}
+            Осталось ₽{{ (g.target - g.saved).toLocaleString("ru-RU") }}
           </span>
         </div>
 
@@ -86,24 +120,30 @@
             class="grow"
             inputClass="text-sm"
           />
-          <Button label="+" @click="depositGoal(g)" :disabled="!g._deposit" size="small" />
+          <Button
+            label="+"
+            @click="depositGoal(g)"
+            :disabled="!g._deposit"
+            size="small"
+          />
         </div>
       </template>
     </Card>
   </div>
 
   <!-- Диалог -->
-  <Dialog
-    v-model:visible="showGoalDialog"
-    :header="editingGoal?.id ? 'Редактировать цель' : 'Новая цель'"
-    :style="{ width: '480px' }"
-    modal
+  <ModalDialog
+    v-model="showGoalDialog"
+    :title="editingGoal?.id ? 'Редактировать цель' : 'Новая цель'"
+    :confirm-label="editingGoal?.id ? 'Сохранить' : 'Создать'"
+    :confirm-disabled="!gf.name || !gf.target"
+    @confirm="saveGoal"
   >
     <div class="flex flex-col gap-4 mt-2">
-
       <div class="flex gap-3">
         <Button
-          v-for="t in goalTypeOptions" :key="t.value"
+          v-for="t in goalTypeOptions"
+          :key="t.value"
           :label="t.label"
           :outlined="gf.type !== t.value"
           :severity="t.value === 'saving' ? 'success' : 'warn'"
@@ -119,18 +159,41 @@
 
       <div class="flex gap-3">
         <div class="flex flex-col gap-1 grow">
-          <label class="label">{{ gf.type === 'saving' ? 'Целевая сумма' : 'Бюджет на трату' }} (₽)</label>
-          <InputNumber v-model="gf.target" :min="1" :useGrouping="true" placeholder="100 000" />
+          <label class="label"
+            >{{
+              gf.type === "saving" ? "Целевая сумма" : "Бюджет на трату"
+            }}
+            (₽)</label
+          >
+          <InputNumber
+            v-model="gf.target"
+            :min="1"
+            :useGrouping="true"
+            placeholder="100 000"
+          />
         </div>
         <div class="flex flex-col gap-1 grow">
-          <label class="label">Уже {{ gf.type === 'saving' ? 'накоплено' : 'потрачено' }} (₽)</label>
-          <InputNumber v-model="gf.saved" :min="0" :useGrouping="true" placeholder="0" />
+          <label class="label"
+            >Уже
+            {{ gf.type === "saving" ? "накоплено" : "потрачено" }} (₽)</label
+          >
+          <InputNumber
+            v-model="gf.saved"
+            :min="0"
+            :useGrouping="true"
+            placeholder="0"
+          />
         </div>
       </div>
 
       <div class="flex flex-col gap-1">
         <label class="label">Дедлайн (необязательно)</label>
-        <DatePicker v-model="gf.deadline" dateFormat="dd.mm.yy" showIcon showButtonBar />
+        <DatePicker
+          v-model="gf.deadline"
+          dateFormat="dd.mm.yy"
+          showIcon
+          showButtonBar
+        />
       </div>
 
       <div class="flex gap-3">
@@ -140,114 +203,175 @@
         </div>
         <div class="flex flex-col gap-1 grow">
           <label class="label">Цвет фона</label>
-          <Select v-model="gf.bg" :options="colorOptions" optionLabel="label" optionValue="value">
+          <Select
+            v-model="gf.bg"
+            :options="colorOptions"
+            optionLabel="label"
+            optionValue="value"
+          >
             <template #value="{ value }">
               <div class="flex items-center gap-2">
-                <span class="inline-block w-4 h-4 rounded-full" :style="{ background: value }"></span>
-                <span>{{ colorOptions.find(c => c.value === value)?.label }}</span>
+                <span
+                  class="inline-block w-4 h-4 rounded-full"
+                  :style="{ background: value }"
+                ></span>
+                <span>{{
+                  colorOptions.find((c) => c.value === value)?.label
+                }}</span>
               </div>
             </template>
             <template #option="{ option }">
               <div class="flex items-center gap-2">
-                <span class="inline-block w-4 h-4 rounded-full" :style="{ background: option.value }"></span>
+                <span
+                  class="inline-block w-4 h-4 rounded-full"
+                  :style="{ background: option.value }"
+                ></span>
                 <span>{{ option.label }}</span>
               </div>
             </template>
           </Select>
         </div>
       </div>
-
     </div>
-
-    <template #footer>
-      <Button label="Отмена" outlined severity="secondary" @click="showGoalDialog = false" />
-      <Button
-        :label="editingGoal?.id ? 'Сохранить' : 'Создать'"
-        @click="saveGoal"
-        :disabled="!gf.name || !gf.target"
-      />
-    </template>
-  </Dialog>
+  </ModalDialog>
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue'
-import Button from 'primevue/button'
-import Card from 'primevue/card'
-import Tag from 'primevue/tag'
-import ProgressBar from 'primevue/progressbar'
-import Divider from 'primevue/divider'
-import Dialog from 'primevue/dialog'
-import InputText from 'primevue/inputtext'
-import InputNumber from 'primevue/inputnumber'
-import Select from 'primevue/select'
-import DatePicker from 'primevue/datepicker'
+import { ref, computed, reactive } from "vue";
+import Button from "primevue/button";
+import Card from "primevue/card";
+import Tag from "primevue/tag";
+import ProgressBar from "primevue/progressbar";
+import Divider from "primevue/divider";
+import InputText from "primevue/inputtext";
+import InputNumber from "primevue/inputnumber";
+import Select from "primevue/select";
+import DatePicker from "primevue/datepicker";
+
+import ModalDialog from "../common/ModalDialog.vue";
 
 const goalTypeOptions = [
-  { label: '💰 Накопление', value: 'saving'   },
-  { label: '🛍️ Трата',      value: 'spending' }
-]
+  { label: "💰 Накопление", value: "saving" },
+  { label: "🛍️ Трата", value: "spending" },
+];
 
 const colorOptions = [
-  { label: 'Мятный',      value: '#e8f4f5' },
-  { label: 'Бежевый',     value: '#f0eeea' },
-  { label: 'Зелёный',     value: '#e3f5ef' },
-  { label: 'Лавандовый',  value: '#ede9f6' },
-  { label: 'Персиковый',  value: '#fdeee8' }
-]
+  { label: "Мятный", value: "#e8f4f5" },
+  { label: "Бежевый", value: "#f0eeea" },
+  { label: "Зелёный", value: "#e3f5ef" },
+  { label: "Лавандовый", value: "#ede9f6" },
+  { label: "Персиковый", value: "#fdeee8" },
+];
 
-const goalIdSeq = ref(10)
+const goalIdSeq = ref(10);
 
 const goals = ref([
-  { id: 1, name: 'Отпуск в Турции', saved: 68000,  target: 120000, type: 'saving',   emoji: '🏖️', bg: '#e8f4f5', deadline: new Date(2026, 6, 1),  _deposit: null },
-  { id: 2, name: 'Новый MacBook',   saved: 95000,  target: 180000, type: 'saving',   emoji: '💻', bg: '#f0eeea', deadline: new Date(2026, 11, 31), _deposit: null },
-  { id: 3, name: 'Резервный фонд',  saved: 210000, target: 300000, type: 'saving',   emoji: '🛡️', bg: '#e3f5ef', deadline: null,                   _deposit: null },
-  { id: 4, name: 'Ремонт кухни',    saved: 45000,  target: 150000, type: 'spending', emoji: '🔨', bg: '#fdeee8', deadline: new Date(2026, 8, 1),   _deposit: null }
-])
+  {
+    id: 1,
+    name: "Отпуск в Турции",
+    saved: 68000,
+    target: 120000,
+    type: "saving",
+    emoji: "🏖️",
+    bg: "#e8f4f5",
+    deadline: new Date(2026, 6, 1),
+    _deposit: null,
+  },
+  {
+    id: 2,
+    name: "Новый MacBook",
+    saved: 95000,
+    target: 180000,
+    type: "saving",
+    emoji: "💻",
+    bg: "#f0eeea",
+    deadline: new Date(2026, 11, 31),
+    _deposit: null,
+  },
+  {
+    id: 3,
+    name: "Резервный фонд",
+    saved: 210000,
+    target: 300000,
+    type: "saving",
+    emoji: "🛡️",
+    bg: "#e3f5ef",
+    deadline: null,
+    _deposit: null,
+  },
+  {
+    id: 4,
+    name: "Ремонт кухни",
+    saved: 45000,
+    target: 150000,
+    type: "spending",
+    emoji: "🔨",
+    bg: "#fdeee8",
+    deadline: new Date(2026, 8, 1),
+    _deposit: null,
+  },
+]);
 
-const totalGoalTarget = computed(() => goals.value.reduce((s, g) => s + g.target, 0))
-const totalGoalSaved  = computed(() => goals.value.reduce((s, g) => s + g.saved,  0))
+const totalGoalTarget = computed(() =>
+  goals.value.reduce((s, g) => s + g.target, 0),
+);
+const totalGoalSaved = computed(() =>
+  goals.value.reduce((s, g) => s + g.saved, 0),
+);
 
 function depositGoal(g) {
-  if (!g._deposit) return
-  g.saved = Math.min(g.saved + g._deposit, g.target)
-  g._deposit = null
+  if (!g._deposit) return;
+  g.saved = Math.min(g.saved + g._deposit, g.target);
+  g._deposit = null;
 }
 
 function removeGoal(id) {
-  goals.value = goals.value.filter(g => g.id !== id)
+  goals.value = goals.value.filter((g) => g.id !== id);
 }
 
-const showGoalDialog = ref(false)
-const editingGoal    = ref(null)
+const showGoalDialog = ref(false);
+const editingGoal = ref(null);
 
-const emptyGf = () => ({ name: '', target: null, saved: 0, type: 'saving', emoji: '🎯', bg: '#e8f4f5', deadline: null })
-const gf = reactive(emptyGf())
+const emptyGf = () => ({
+  name: "",
+  target: null,
+  saved: 0,
+  type: "saving",
+  emoji: "🎯",
+  bg: "#e8f4f5",
+  deadline: null,
+});
+const gf = reactive(emptyGf());
 
 function openGoalDialog(g = null) {
-  editingGoal.value = g
-  Object.assign(gf, g ? { ...g } : emptyGf())
-  showGoalDialog.value = true
+  editingGoal.value = g;
+  Object.assign(gf, g ? { ...g } : emptyGf());
+  showGoalDialog.value = true;
 }
 
 function saveGoal() {
   if (editingGoal.value?.id) {
-    const idx = goals.value.findIndex(g => g.id === editingGoal.value.id)
-    if (idx !== -1) goals.value[idx] = { ...goals.value[idx], ...gf, _deposit: null }
+    const idx = goals.value.findIndex((g) => g.id === editingGoal.value.id);
+    if (idx !== -1)
+      goals.value[idx] = { ...goals.value[idx], ...gf, _deposit: null };
   } else {
-    goals.value.push({ id: goalIdSeq.value++, ...gf, _deposit: null })
+    goals.value.push({ id: goalIdSeq.value++, ...gf, _deposit: null });
   }
-  showGoalDialog.value = false
+  showGoalDialog.value = false;
 }
 
 function formatDate(date) {
-  if (!date) return ''
-  return new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(date))
+  if (!date) return "";
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(date));
 }
 
 function daysLeft(date) {
-  if (!date) return null
-  return Math.max(0, Math.ceil((new Date(date) - new Date()) / 86400000))
+  if (!date) return null;
+  return Math.max(0, Math.ceil((new Date(date) - new Date()) / 86400000));
 }
 </script>
 
@@ -266,9 +390,12 @@ function daysLeft(date) {
 }
 
 .cat-icon {
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.3rem;
   flex-shrink: 0;
 }

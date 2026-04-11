@@ -1,5 +1,5 @@
 <template>
-  <Menubar :model="items" class="fixed top-1 left-1 right-1 z-50">
+  <Menubar :model="items" class="fixed top-1 left-7 right-7 z-50">
     <template #start>
       <Button :icon="isVisible ? 'pi pi-times' : 'pi pi-bars'" @click="$emit('toggleCard')"
         class="px-4 py-2 rounded-lg shadow-lg z-10" variant="link" />
@@ -11,9 +11,8 @@
     </template>
     <template #end>
       
-      <div class="flex items-center gap-10">
+      <div class="flex items-center">
         <p class="text-2xl self-center">{{ currentDate }}</p>
-        <InputText placeholder="Search" type="text" class="w-32 sm:w-auto" />
       </div>
     </template>
   </Menubar>

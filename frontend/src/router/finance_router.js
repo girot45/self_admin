@@ -24,7 +24,7 @@ export const financeRoutes = {
       name: "FinanceReports",
       component: () => import("@/components/finance/FinanceReports.vue"),
     },
-        {
+    {
       path: "budgets",
       name: "FinanceBugets",
       component: () => import("@/components/finance/FinanceBugets.vue"),
