@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useFinanceStore } from "./finance";
+import { useFinanceStore } from "@/stores/finance";
 import { PRESET_COLORS } from "@/constants/projects";
 
 export const useProjectStore = defineStore("projects", {

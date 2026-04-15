@@ -46,9 +46,9 @@
       to: '/finance', // Add 'to' property for routing
     },
     {
-      label: "About",
+      label: "CRM",
       icon: "pi pi-info-circle",
-      to: '/about',
+      to: '/crm',
     },
     {
       label: "Dash",

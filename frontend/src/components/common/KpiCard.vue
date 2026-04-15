@@ -31,7 +31,7 @@
       </div>
 
       <div
-        class="ml-4 flex-shrink-0 justify-self-center self-center"
+        class="ml-4 flex-shrink-0 justify-self-center self-center icon-wrapper"
         :class="iconColorClass"
       >
         <i :class="icon" :style="{ fontSize: iconSize }"></i>
@@ -50,7 +50,7 @@ const props = defineProps({
     default: "",
   },
   value: {
-    type: String,
+    type: [String, Number],
     default: "",
   },
   valueTextClass: {

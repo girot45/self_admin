@@ -45,28 +45,22 @@ function onDragStart(e) {
             : task.priority === 'medium'
               ? '#3B82F6'
               : '#9CA3AF',
-    }"
-    draggable="true"
-    @dragstart="onDragStart"
-  >
+    }" draggable="true" @dragstart="onDragStart">
     <div class="flex items-center justify-between mb-1">
-      <Tag
-        :value="TASK_PRIORITY_LABELS[task.priority]"
-        :severity="TASK_PRIORITY_SEVERITY[task.priority]"
-        class="text-xs"
-      />
+      <Tag :value="TASK_PRIORITY_LABELS[task.priority]" :severity="TASK_PRIORITY_SEVERITY[task.priority]"
+        class="text-xs" />
       <span v-if="task.dueDate" class="text-xs text-gray-400">{{
-        task.dueDate
-      }}</span>
+        computed(() => {
+          if (!task.dueDate) return '—'
+          return new Date(task.dueDate).toLocaleDateString('ru-RU')
+        })}}</span>
     </div>
 
     <p class="font-medium text-sm">{{ task.title }}</p>
 
     <div v-if="epic" class="flex items-center gap-1 mt-1">
-      <span
-        class="text-xs px-1.5 py-0.5 rounded font-medium truncate"
-        :style="{ background: epic.color + '22', color: epic.color }"
-      >
+      <span class="text-xs px-1.5 py-0.5 rounded font-medium truncate"
+        :style="{ background: epic.color + '22', color: epic.color }">
         {{ epic.title }}
       </span>
     </div>
@@ -86,34 +80,18 @@ function onDragStart(e) {
     <div class="flex items-center justify-between mt-2">
       <div v-if="task.financeIds.length" class="flex items-center gap-1">
         <i class="pi pi-wallet text-xs text-gray-400" />
-        <span
-          class="text-xs"
-          :class="summary.balance >= 0 ? 'text-green-500' : 'text-red-500'"
-        >
+        <span class="text-xs" :class="summary.balance >= 0 ? 'text-green-500' : 'text-red-500'">
           {{ summary.balance >= 0 ? "+" : "" }}{{ summary.balance }} ₽
         </span>
       </div>
       <span v-if="task.assignee" class="text-xs text-gray-400 ml-auto">{{
         task.assignee
-      }}</span>
+        }}</span>
     </div>
 
-    <div
-      class="opacity-0 group-hover:opacity-100 flex gap-1 mt-2 transition-opacity"
-    >
-      <Button
-        icon="pi pi-pencil"
-        text
-        size="small"
-        @click.stop="emit('edit', task)"
-      />
-      <Button
-        icon="pi pi-trash"
-        text
-        size="small"
-        severity="danger"
-        @click.stop="store.deleteTask(task.id)"
-      />
+    <div class="opacity-0 group-hover:opacity-100 flex gap-1 mt-2 transition-opacity">
+      <Button icon="pi pi-pencil" text size="small" @click.stop="emit('edit', task)" />
+      <Button icon="pi pi-trash" text size="small" severity="danger" @click.stop="store.deleteTask(task.id)" />
     </div>
   </div>
 </template>

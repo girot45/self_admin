@@ -30,7 +30,7 @@
         :pt="{ root: { class: 'w-full' } }"
       />
 
-      <InputTextarea
+      <Textarea
         v-else-if="type === 'textarea'"
         v-model="modelValue"
         :placeholder="placeholder"
@@ -47,7 +47,8 @@
 <script setup>
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
-import InputTextarea from "primevue/inputtextarea";
+import Textarea from "primevue/textarea";
+import { computed } from "vue";
 
 const props = defineProps({
   modelValue: [String, Number, null],
@@ -81,5 +82,10 @@ const props = defineProps({
   },
 });
 
-defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
+
+const modelValue = computed({
+  get: () => props.modelValue,
+  set: (value) => emit("update:modelValue", value),
+});
 </script>
